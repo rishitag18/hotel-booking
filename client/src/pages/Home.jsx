@@ -1,6 +1,6 @@
 import React from 'react';
 import FeaturedDestinations from '../components/FeaturedDestinations';
-import Hero from '../components/Hero'; // Capitalized to match component name
+import Hero from '../components/Hero';
 import ExclusiveOffers from '../components/ExclusiveOffers';
 import Testimonial from '../components/Testimonial';
 import NewsLetter from '../components/NewsLetter';

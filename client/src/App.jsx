@@ -38,10 +38,13 @@ const App = () => {
             <Route path='add-room' element={<AddRoom />} />
             <Route path='list-room' element={<ListRoom />} />
           </Route>
+
+          {/* Optional fallback */}
+          <Route path='*' element={<Home />} />
         </Routes>
       </div>
 
-      <Footer />
+      {!isOwnerPath && <Footer />}
     </div>
   );
 };

@@ -14,6 +14,7 @@ const clerkWebhooks = async (req, res) => {
     await whook.verify(JSON.stringify(req.body), headers);
 
     const { data, type } = req.body;
+
     const userData = {
       _id: data.id,
       email: data.email_addresses[0].email_address,
@@ -27,20 +28,20 @@ const clerkWebhooks = async (req, res) => {
         break;
       }
       case "user.updated": {
-        await User.findByAndUpdate( data.id, userData);
+        await User.findByIdAndUpdate(data.id, userData); // ✅ fixed method
         break;
       }
       case "user.deleted": {
-        await User.findBYAndDelete(data.id);
+        await User.findByIdAndDelete(data.id); // ✅ fixed method
         break;
       }
     }
 
-    res.json({ success: true, message: "Webhook received" })
+    res.json({ success: true, message: "Webhook received" });
   } catch (error) {
     console.log(error.message);
-   res.json({success: false, message: error.message});
-}
-}
+    res.json({ success: false, message: error.message });
+  }
+};
 
 export default clerkWebhooks;

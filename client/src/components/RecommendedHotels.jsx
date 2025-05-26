@@ -7,18 +7,16 @@ const RecommendedHotels = () => {
   const { rooms, searchedCities } = useAppContext();
   const [recommended, setRecommended] = useState([]);
 
-  const filterHotels = () => {
+  useEffect(() => {
     const filteredHotels = rooms.filter(room =>
       searchedCities.includes(room.hotel.city)
     );
     setRecommended(filteredHotels);
-  };
-
-  useEffect(() => {
-    filterHotels();
   }, [rooms, searchedCities]);
 
-  return recommended.length > 0 && (
+  if (!recommended.length) return null;
+
+  return (
     <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 py-20'>
       <Title
         title='Recommended Hotels'
