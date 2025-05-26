@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@clerk/backend": "^1.33.0",
     "@tailwindcss/vite": "^4.1.7",
     "tailwindcss": "^4.1.7"
   }
