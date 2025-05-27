@@ -3,7 +3,7 @@ import { Webhook } from "svix";
 
 const clerkWebhooks = async (req, res) => {
   try {
-    const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
+    const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
 
     const headers = {
       "svix-id": req.headers["svix-id"],
@@ -11,7 +11,7 @@ const clerkWebhooks = async (req, res) => {
       "svix-signature": req.headers["svix-signature"],
     };
 
-    await whook.verify(JSON.stringify(req.body), headers);
+    await whook.verify(JSON.stringify(req.body), headers)
 
     const { data, type } = req.body;
 
@@ -28,11 +28,11 @@ const clerkWebhooks = async (req, res) => {
         break;
       }
       case "user.updated": {
-        await User.findByIdAndUpdate(data.id, userData); // ✅ fixed method
+        await User.findByIdAndUpdate(data.id, userData); 
         break;
       }
       case "user.deleted": {
-        await User.findByIdAndDelete(data.id); // ✅ fixed method
+        await User.findByIdAndDelete(data.id); 
         break;
       }
     }

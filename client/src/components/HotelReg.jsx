@@ -11,13 +11,12 @@ const HotelReg = () => {
   const [city, setCity] = useState("") 
   
   const onSubmitHandler = async (event) => {
-    event.preventDefault();
     try {
-      const token = await getToken();
+      event.preventDefault();
       const { data } = await axios.post(
         `/api/hotels/`,
         { name, contact, address, city },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${ await getToken()}` } }
       );
 
       if (data.success) {

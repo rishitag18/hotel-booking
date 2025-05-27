@@ -11,12 +11,12 @@ const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
       checkInDate: { $lte: checkOutDate },
       checkOutDate: { $gte: checkInDate },
     });
-    return bookings.length === 0;
+    const isAvailable = bookings.length === 0;
+    return isAvailable;
   } catch (error) {
-    console.error("Availability check error:", error.message);
-    return false;
+    console.error(error.message);
   }
-};
+}
 
 // POST /api/bookings/check-availability
 export const checkAvailabilityAPI = async (req, res) => {
@@ -27,7 +27,7 @@ export const checkAvailabilityAPI = async (req, res) => {
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
-};
+}
 
 // POST /api/booking/book
 export const createBooking = async (req, res) => {
@@ -41,14 +41,14 @@ export const createBooking = async (req, res) => {
     }
 
     const roomData = await Room.findById(room).populate("hotel");
-    if (!roomData) {
-      return res.json({ success: false, message: "Room not found" });
-    }
+    let totalPrice = roomData.pricePerNight;
 
     const checkIn = new Date(checkInDate);
     const checkOut = new Date(checkOutDate);
-    const nights = Math.ceil((checkOut - checkIn) / (1000 * 3600 * 24));
-    const totalPrice = nights * roomData.pricePerNight;
+    const timeDiff = checkOut.getTime() - checkIn.getTime();
+    const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    totalPrice *= nights;
 
     const booking = await Booking.create({
       user,
@@ -84,10 +84,10 @@ export const createBooking = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.json({ success: true, message: "Booking created successfully", booking });
+    res.json({ success: true, message: "Booking created successfully" });
   } catch (error) {
-    console.error("Booking creation failed:", error);
-    res.json({ success: false, message: error.message });
+    console.error(error);
+    res.json({ success: false, message: "Failed to create booking"});
   }
 };
 
@@ -100,9 +100,9 @@ export const getUserBookings = async (req, res) => {
       .sort({ createdAt: -1 });
     res.json({ success: true, bookings });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.json({ success: false, message: 'Failed to fetch bookings' });
   }
-};
+}
 
 // GET /api/bookings/hotel
 export const getHotelBookings = async (req, res) => {
@@ -126,6 +126,6 @@ export const getHotelBookings = async (req, res) => {
       dashboardData: { totalBookings, totalRevenue, bookings }
     });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.json({ success: false, message: "Failed to fetch Bookings" });
   }
 };

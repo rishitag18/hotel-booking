@@ -36,20 +36,15 @@ export const AppProvider = ({ children }) => {
   // ✅ Fetch user from backend (requires token to be awaited first)
   const fetchUser = async () => {
     try {
-      const token = await getToken();
-      if (!token) throw new Error("Clerk token not found");
 
       const { data } = await axios.get("/api/user", {
         headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+          Authorization: `Bearer ${await getToken()}`}})
       if (data.success) {
         setIsOwner(data.role === "hotelOwner");
-        setSearchedCities(data.recentSearchedCities);
+        setSearchedCities(data.recentSearchedCities)
       } else {
-        setTimeout(() => fetchUser(), 5000); // Retry logic
+        setTimeout(() => {fetchUser()}, 5000); // Retry logic
       }
     } catch (error) {
       toast.error(error.message || "Failed to fetch user info");
